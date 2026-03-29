@@ -1,0 +1,76 @@
+2026/03/29 12:27:58 [INFO] logger.py(23) - FileHandler.encoding = utf-8
+2026/03/29 12:27:58 [INFO] logger.py(24) - TEST_MODE on
+2026/03/29 12:27:58 [INFO] cfg_read.py(108) - config.cfg load complete.
+map size  :3000
+card num  :A59D2E646954A37B
+db dir    :E:/BaiduNetdiskDownload/SDVX7-2026020300/asphyxia/savedata/sdvx@asphyxia.db
+game dir  :E:/BaiduNetdiskDownload/SDVX7-2026020300
+output    :E:/BaiduNetdiskDownload/SDVX7-2026020300
+skin name :gen6
+language  :ZH
+is init   :True
+version   :2026020300
+2026/03/29 12:27:58 [INFO] npdb.py(12) - Load aka_db, level_table, search_db from ./data
+2026/03/29 12:27:58 [INFO] asp.py(135) - Profile data load successfully.
+user name   :LOLISUKI
+appeal card :6503
+akaname     :よろしくお願いします
+skill       :0
+crew        :0014
+2026/03/29 12:27:58 [INFO] asp.py(143) - Asphyxia database parse complete.
+2026/03/29 12:27:58 [INFO] asp.py(150) - Update akaname data to よろしくお願いします
+2026/03/29 12:28:01 [DEBUG] app.py(276) - Get user operator 1
+2026/03/29 12:28:01 [DEBUG] main.py(526) - Generate B50 data complete.
+|OVERALL VOLFORCE 19.018
+|No.  |VF      |DIFF   |SCORE    |RANK  |GRA   |NAME
+|#1   |20.20   |MXM17.5  |10000000 |PUC   |S     |The setting sun(burst)
+|#2   |20.10   |EXH18.5  |9960053  |EX-HC |S     |Firestorm
+|#3   |20.00   |GRV18  |9988340  |UC    |S     |Opium and Purple haze
+|#4   |19.90   |MXM18.4  |9908318  |EX-HC |S     |SHARK ATTACK
+|#5   |19.90   |MXM19.5  |9831231  |HC    |AAA+  |Daisycutter
+|#6   |19.85   |MXM18.3  |9933524  |EX-HC |S     |BEAST BASS BOMB
+|#7   |19.70   |MXM18.2  |9924959  |EX-HC |S     |Lunatic Mare
+|#8   |19.60   |MXM18.1  |9918946  |EX-HC |S     |最小三倍完全数
+|#9   |19.55   |MXM18.1  |9908631  |EX-HC |S     |Inevitable Magic
+|#10  |19.40   |MXM17.5  |9969915  |UC    |S     |Sharkbait
+|#11  |19.35   |EXH17.5  |9958471  |UC    |S     |Pet Peeve
+|#12  |19.35   |MXM18.5  |9860335  |EX-HC |AAA+  |ARACHNE
+|#13  |19.30   |EXH17.5  |9931818  |UC    |S     |L2 -Reminiscence- (SDVX ver.)
+|#14  |19.25   |EXH17.5  |9901055  |UC    |S     |EYE OF THE HEAVEN
+|#15  |19.15   |MXM18.3  |9888795  |EX-HC |AAA+  |SHARK IMPACT
+|#16  |19.05   |EXH18.6  |9868951  |HC    |AAA+  |灼熱Beach Side Bunny
+|#17  |19.05   |MXM18.6  |9859484  |HC    |AAA+  |緋色月下、狂咲ノ絶 (nayuta 2017 ver)
+|#18  |19.05   |MXM18.6  |9852245  |HC    |AAA+  |FAR GONE
+|#19  |19.00   |EXH17.5  |9960334  |EX-HC |S     |Daisycutter
+|#20  |19.00   |MXM17.5  |9946808  |EX-HC |S     |Into The Madness
+|#21  |18.95   |VVD17.5  |9932256  |EX-HC |S     |Hexennacht
+|#22  |18.95   |EXH17.5  |9931129  |EX-HC |S     |常夏！！クリスタライズ・シャーベット
+|#23  |18.95   |MXM17.5  |9935213  |EX-HC |S     |Sunflower Vibes
+|#24  |18.95   |MXM17.5  |9916666  |EX-HC |S     |Made In Love
+|#25  |18.95   |XCD19.1  |9744195  |HC    |AAA   |幸せになれる隠しコマンドがあるらしい
+|#26  |18.95   |EXH17.5  |9923076  |EX-HC |S     |Plan 8
+|#27  |18.95   |MXM19.5  |9737295  |NC    |AAA   |Gryphone
+|#28  |18.95   |EXH17.5  |9920819  |EX-HC |S     |Gryphone
+|#29  |18.90   |EXH17.5  |9905115  |EX-HC |S     |Guinevere～白き妖精～
+|#30  |18.90   |EXH17.5  |9914255  |EX-HC |S     |夏色DIARY -Summer Dazzlin' Vacation miX-
+|#31  |18.85   |EXH18.4  |9872624  |HC    |AAA+  |#Endroll
+|#32  |18.85   |MXM17  |9985532  |UC    |S     |WWW
+|#33  |18.80   |EXH17  |9951974  |UC    |S     |QQ
+|#34  |18.80   |MXM18  |9852889  |EX-HC |AAA+  |星界のアルペジオ
+|#35  |18.75   |MXM17  |9933294  |UC    |S     |Synergy For Angels
+|#36  |18.75   |EXH17  |9933455  |UC    |S     |Synthesis.
+|#37  |18.65   |EXH18.2  |9866204  |HC    |AAA+  |↓↓↓
+|#38  |18.60   |EXH17.5  |9831250  |UC    |AAA+  |Blue Diamond
+|#39  |18.55   |MXM18.2  |9819458  |HC    |AAA+  |Massive Strength
+|#40  |18.50   |MXM17  |9972350  |EX-HC |S     |Resonant Gear
+|#41  |18.50   |GRV17  |9972268  |EX-HC |S     |ポメグラネイト
+|#42  |18.50   |EXH17.5  |9801587  |UC    |AAA+  |Xeno Gravity
+|#43  |18.50   |MXM17  |9967741  |EX-HC |S     |チョコレートスマイル
+|#44  |18.45   |MXM17  |9953063  |EX-HC |S     |Secret Traveler -MeniRemix-
+|#45  |18.45   |INF16  |10000000 |PUC   |S     |GAMBOL (dfk SLC rmx)
+|#46  |18.45   |EXH17  |9964366  |EX-HC |S     |Chronomia
+|#47  |18.45   |EXH16  |10000000 |PUC   |S     |SHARK ATTACK
+|#48  |18.45   |EXH16  |10000000 |PUC   |S     |#Fairy_dancing_in_lake
+|#49  |18.45   |EXH17  |9940604  |EX-HC |S     |The setting sun
+|#50  |18.45   |MXM17  |9953450  |EX-HC |S     |もぐもぐYUMMY！
+2026/03/29 12:28:04 [INFO] main.py(680) - Plot saved at [E:/BaiduNetdiskDownload/SDVX7-2026020300/LOLISUKI_B50.png] successfully.
