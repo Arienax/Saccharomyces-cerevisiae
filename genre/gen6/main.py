@@ -86,6 +86,44 @@ class APIAsphyxia:
                 
             print(f"[API] 接口数据解析成功，共载入 {len(self.music_map)} 条成绩。")
             
+            # === 将 VF 与定数计算移至此处 ===
+            grade_coef = [0, 0.8, 0.82, 0.85, 0.88, 0.91, 0.94, 0.97, 1.0, 1.02, 1.05]
+            clear_coef = [0, 0.5, 1.0, 1.02, 1.04, 1.06, 1.1]
+            diff_keys = ['novice', 'advanced', 'exhaust', 'infinite', 'maximum']
+
+            for record in self.music_map:
+                if not record[0]:
+                    continue
+                
+                mid = int(record[1])
+                m_type = int(record[2])
+                score = int(record[3])
+                clear = int(record[4])
+                grade = int(record[5])
+                
+                song = db_reader.music_db.get(mid, {})
+                diffs = song.get('difficulty', {})
+                try:
+                    exact_level = float(diffs.get(diff_keys[m_type], 0))
+                except (IndexError, ValueError, KeyError):
+                    exact_level = 0.0
+
+                if score > 0 and clear > 0:
+                    clear_map = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 1}
+                    safe_clear = clear_map.get(clear, 0)
+                    exact_vf = int(exact_level * 20 * (score / 10000000) * grade_coef[grade] * clear_coef[safe_clear]) / 20
+                else:
+                    exact_vf = 0.0
+
+                # 补全可能缺失的列表长度
+                while len(record) < 11:
+                    record.append(0)
+
+                record[8] = str(exact_level) if exact_level % 1 != 0 else str(int(exact_level))
+                record[9] = exact_vf
+                record[10] = exact_vf
+            # ==============================
+            
         except Exception as e:
             print(f"[API] 请求或解析失败: {e}")
             traceback.print_exc()
@@ -126,47 +164,7 @@ def direct_get_jacket(mid, m_type, size='b'):
 
 get_jacket = direct_get_jacket
 
-grade_coef = [0, 0.8, 0.82, 0.85, 0.88, 0.91, 0.94, 0.97, 1.0, 1.02, 1.05]
-clear_coef = [0, 0.5, 1.0, 1.02, 1.04, 1.06, 1.1]
-diff_keys = ['novice', 'advanced', 'exhaust', 'infinite', 'maximum']
 
-for record in asp.music_map:
-    if not record[0]:
-        continue
-    
-    # 强制转换 mid 为 int，解决字符串匹配失败的问题
-    mid = int(record[1])
-    m_type = int(record[2])
-    score = int(record[3])
-    clear = int(record[4])
-    grade = int(record[5])
-    
-    song = db_reader.music_db.get(mid, {})
-    diffs = song.get('difficulty', {})
-    try:
-        exact_level = float(diffs.get(diff_keys[m_type], 0))
-    except (IndexError, ValueError, KeyError):
-        exact_level = 0.0
-
-    if score > 0 and clear > 0:
-        # 将数据库原始的 clear 状态映射为 0-5 的索引
-        clear_map = {0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 5: 5, 6: 6, 7: 1}
-        safe_clear = clear_map.get(clear, 0)
-        # 先放大 20 倍后强制抹除小数点（int），再除以 20 适配查分器的 23.1 显示比例
-        exact_vf = int(exact_level * 20 * (score / 10000000) * grade_coef[grade] * clear_coef[safe_clear]) / 20
-    else:
-        exact_vf = 0.0
-
-    # 补全可能缺失的列表长度
-    while len(record) < 11:
-        record.append(0)
-
-    # 同步更新显示定数、VF数值以及用于 B50 排序的内部元素
-    record[8] = str(exact_level) if exact_level % 1 != 0 else str(int(exact_level))
-    record[9] = exact_vf
-    record[10] = exact_vf
-
-# === 覆盖到此结束 ===
 
 
 def plot_single(sg_index: int, _music_map: list = asp.music_map, profile: list = asp.profile) -> str:
@@ -487,23 +485,16 @@ def plot_single(sg_index: int, _music_map: list = asp.music_map, profile: list =
         return msg
 
 
-def plot_b50(_music_map: list = asp.music_map, profile: list = asp.profile) -> str:
-    """
-    Plot function for best 50 records
-    :param _music_map: a list contains all music records, each line of music_map should be:
-                       [is_recorded, mid, m_type, score, clear, grade, timestamp, exscore] (1 bool with 8 ints)
-                       and (at least) two additional line:
-                       [lv, vf] (int, float)
-                       Please check /parse/asp.music_map for explicit definition.
-    :param profile:    a list of user profile:
-                       [user_name, ap_card, akaname, skill, crew_id]
-    :return:           text data of best 50
-    """
-
+def plot_b50(_music_map: list = None, profile: list = None) -> str:
+    # 每次调用函数时，重新请求 API 并获取最新数据
+    if _music_map is None or profile is None:
+        current_asp = APIAsphyxia()
+        _music_map = current_asp.music_map
+        profile = current_asp.profile
+        
     """
     Read and initialize data
     """
-    # Unpack profile data & sort music records
     music_map = deepcopy(_music_map)
     music_map.sort(key=lambda x: x[10], reverse=True)
     music_b50 = music_map[:50]

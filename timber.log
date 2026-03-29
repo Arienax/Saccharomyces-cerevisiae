@@ -1,6 +1,6 @@
-2026/03/29 12:27:58 [INFO] logger.py(23) - FileHandler.encoding = utf-8
-2026/03/29 12:27:58 [INFO] logger.py(24) - TEST_MODE on
-2026/03/29 12:27:58 [INFO] cfg_read.py(108) - config.cfg load complete.
+2026/03/29 14:26:18 [INFO] logger.py(23) - FileHandler.encoding = utf-8
+2026/03/29 14:26:18 [INFO] logger.py(24) - TEST_MODE on
+2026/03/29 14:26:18 [INFO] cfg_read.py(108) - config.cfg load complete.
 map size  :3000
 card num  :A59D2E646954A37B
 db dir    :E:/BaiduNetdiskDownload/SDVX7-2026020300/asphyxia/savedata/sdvx@asphyxia.db
@@ -10,17 +10,17 @@ skin name :gen6
 language  :ZH
 is init   :True
 version   :2026020300
-2026/03/29 12:27:58 [INFO] npdb.py(12) - Load aka_db, level_table, search_db from ./data
-2026/03/29 12:27:58 [INFO] asp.py(135) - Profile data load successfully.
+2026/03/29 14:26:18 [INFO] npdb.py(12) - Load aka_db, level_table, search_db from ./data
+2026/03/29 14:26:18 [INFO] asp.py(135) - Profile data load successfully.
 user name   :LOLISUKI
 appeal card :6503
 akaname     :よろしくお願いします
 skill       :0
 crew        :0014
-2026/03/29 12:27:58 [INFO] asp.py(143) - Asphyxia database parse complete.
-2026/03/29 12:27:58 [INFO] asp.py(150) - Update akaname data to よろしくお願いします
-2026/03/29 12:28:01 [DEBUG] app.py(276) - Get user operator 1
-2026/03/29 12:28:01 [DEBUG] main.py(526) - Generate B50 data complete.
+2026/03/29 14:26:18 [INFO] asp.py(143) - Asphyxia database parse complete.
+2026/03/29 14:26:18 [INFO] asp.py(150) - Update akaname data to よろしくお願いします
+2026/03/29 14:26:20 [DEBUG] app.py(276) - Get user operator 1
+2026/03/29 14:26:20 [DEBUG] main.py(517) - Generate B50 data complete.
 |OVERALL VOLFORCE 19.018
 |No.  |VF      |DIFF   |SCORE    |RANK  |GRA   |NAME
 |#1   |20.20   |MXM17.5  |10000000 |PUC   |S     |The setting sun(burst)
@@ -73,4 +73,4 @@ crew        :0014
 |#48  |18.45   |EXH16  |10000000 |PUC   |S     |#Fairy_dancing_in_lake
 |#49  |18.45   |EXH17  |9940604  |EX-HC |S     |The setting sun
 |#50  |18.45   |MXM17  |9953450  |EX-HC |S     |もぐもぐYUMMY！
-2026/03/29 12:28:04 [INFO] main.py(680) - Plot saved at [E:/BaiduNetdiskDownload/SDVX7-2026020300/LOLISUKI_B50.png] successfully.
+2026/03/29 14:26:22 [INFO] main.py(671) - Plot saved at [E:/BaiduNetdiskDownload/SDVX7-2026020300/LOLISUKI_B50.png] successfully.
