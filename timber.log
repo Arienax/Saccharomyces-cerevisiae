@@ -1,0 +1,11 @@
+2026/03/31 22:38:55 [INFO] logger.py(23) - FileHandler.encoding = utf-8
+2026/03/31 22:38:55 [INFO] logger.py(24) - TEST_MODE on
+2026/03/31 22:39:00 [DEBUG] app.py(50) - Get summary from level "17"
+2026/03/31 22:39:00 [DEBUG] main.py(969) - Generate summary data complete.
+| Level Summary from lv.17
+| Level    NC      HC      UC      PUC     | AAA     AAA+    S       | SUM
+| lv.17    69      366     11      1       | 123     121     61      | 822     
+| lv.18    168     62      1       0       | 26      13      7       | 736     
+| lv.19    14      2       0       0       | 2       1       0       | 203     
+| lv.20    0       0       0       0       | 0       0       0       | 31      
+2026/03/31 22:39:15 [INFO] main.py(1436) - Plot saved at [E:\BaiduNetdiskDownload\SDVX7-2026020300/LOLISUKI_SUMMARY.png] successfully.

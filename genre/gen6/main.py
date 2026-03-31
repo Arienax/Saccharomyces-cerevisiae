@@ -513,7 +513,7 @@ def plot_b50(_music_map: list = None, profile: list = None) -> str:
     """
     msg = ['|OVERALL VOLFORCE %.3f\n' % vol_force,
            '|No.  |VF      |DIFF   |SCORE    |RANK  |GRA   |NAME']
-    for index in range(50):
+    for index in range(len(music_b50)):
         valid, mid, m_type, score, clear, grade, m_time, exs, lv, vf = music_b50[index][:10]
         if not valid:
             break
@@ -580,7 +580,7 @@ def plot_b50(_music_map: list = None, profile: list = None) -> str:
 
         h_size, l_size = score_h_font.getbbox('0')[2], score_l_font.getbbox('0')[2]
 
-        for index in range(50):
+        for index in range(len(music_b50)):
             # Unpack data & validity check
             valid, mid, m_type, score, clear, grade, m_time, exs, lv, vf = music_b50[index][:10]
             inf_ver = fake_table[mid][9]
@@ -704,7 +704,7 @@ def plot_level(level: int, limits: tuple, grade_flag: str = None, _music_map: li
     lim_l, lim_h = limits
     lv_map = []
     for record in _music_map:
-        if int(record[8]) == level and lim_h >= record[3] >= lim_l:
+        if int(float(record[8])) == level and lim_h >= record[3] >= lim_l:
             lv_map.append(record)
 
     lv_map.sort(key=lambda x: x[3], reverse=True)
@@ -948,6 +948,7 @@ def plot_summary(base_lv: int, _music_map: list = None, profile: list = None):
         valid, mid, m_type, score, clear, grade, m_time, exs, lv, vf = record[:10]
         if not valid:
             continue
+        lv = int(float(lv))
         level_summary[lv][clear_index[clear]] += 1
         level_summary[lv][grade_index[grade]] += 1
         hist_list[lv][int(grade_index[grade] - 11)].append(score // 10000)
@@ -973,6 +974,7 @@ def plot_summary(base_lv: int, _music_map: list = None, profile: list = None):
         valid, mid, m_type, score, clear, grade, m_time, exs, lv, vf = record[:10]
         if not valid:
             continue
+        lv = int(float(lv))
         vf_list.append((score, vf, lv))
         low_score, low_lv, high_lv = min(low_score, score), min(low_lv, int(lv)), max(high_lv, int(lv))
     high_vf, low_vf = vf_list[0][1], vf_list[-1][1]
@@ -1212,7 +1214,7 @@ def plot_summary(base_lv: int, _music_map: list = None, profile: list = None):
 
             line_kws = {"lw": 2}
             sns.histplot(data_list, palette=color, alpha=1, binwidth=2)
-            sns.histplot(data_all, palette=color, alpha=0, binwidth=2, kde=True, line_kws=line_kws, color='ghostwhite')
+            sns.histplot(data_all, alpha=0, binwidth=2, kde=True, line_kws=line_kws, color='ghostwhite')
 
             ax.spines['bottom'].set_color('w')
             ax.spines['top'].set_color('w')
@@ -1355,8 +1357,8 @@ def plot_summary(base_lv: int, _music_map: list = None, profile: list = None):
                     pale_grey = (128, 128, 128)
                     pale_color = (np.array(int_color) + np.array(pale_grey) * 2) // 3
                     pale.append(rgb_2_hex(pale_color))
-            sns.violinplot(data=data_frame, x='lv', y='score', inner=None, color='.8', palette=pale)
-            sns.stripplot(data=data_frame, x='lv', y='score', palette=palette)
+            sns.violinplot(data=data_frame, x='lv', y='score', hue='lv', legend=False, inner=None, color='.8', palette=pale)
+            sns.stripplot(data=data_frame, x='lv', y='score', hue='lv', legend=False, palette=palette)
 
             plt.ylabel('SCORE', fontproperties=mat_font)
             plt.xlabel('LEVEL', fontproperties=mat_font)
