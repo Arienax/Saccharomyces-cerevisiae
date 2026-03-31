@@ -1,16 +1,20 @@
 import json
 import os
 import cv2
+from dotenv import load_dotenv
 
-# --- 配置你的实际路径 ---
-JSON_PATH = r'D:\Download\sdvxbot\music\music_db.json'  # 你的 json 文件路径
-JK_DIR = r'D:\Download\sdvxbot\jk'               # 你的封面文件夹路径
-# ------------------------
+# 加载环境变量
+load_dotenv()
+
+JSON_PATH = os.getenv('SDVX_JSON_PATH')
+JK_DIR = os.getenv('SDVX_JK_DIR')
 
 class SDVXDataReader:
     def __init__(self):
         self.music_db = {}
         self._load_json()
+
+    # ... 下面的所有类方法保持不变 ...
 
     def _load_json(self):
         """一次性加载 JSON 到内存字典"""

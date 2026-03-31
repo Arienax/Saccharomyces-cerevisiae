@@ -1,15 +1,19 @@
-from utli.cfg_read import cfg
-# from hashlib import sha256
+import os
+from dotenv import load_dotenv
 from os import path, listdir
 from ..universal import *
 import time
+
+# 加载环境变量
+load_dotenv()
+game_dir = os.getenv("DIR_GAME_PATH")
 
 """
 Initialization
 """
 
 # Reading config
-song_folders = cfg.game_dir + '/music'
+song_folders = game_dir + '/music'
 img_archive = local_dir + '/img_archive/gen6'
 
 """
@@ -62,7 +66,6 @@ staff_hash = 'b3e46c3a84f6e042ef5f3d934b746ded23a3961d0774293ec2fbe3b42e0ada47'
 Functions
 """
 
-
 def get_vf_level(vf: float, is_color: bool = False, is_darker: bool = False):
     if vf < 0 or vf > 24:
         return
@@ -84,36 +87,28 @@ def get_vf_level(vf: float, is_color: bool = False, is_darker: bool = False):
 
 
 def get_jacket_path(mid: int, m_type: int, size: str = False) -> str:
-    # --- 核心修改：明确定义 7 代的音乐文件夹路径 ---
-    song_folders = cfg.game_dir + '/data/music'
-    # -------------------------------------------
-
-    mid_str = str(mid).zfill(4) # 将 ID 转换为 4 位字符串，例如 1855 -> "1855"
+    song_folders = game_dir + '/data/music'
+    mid_str = str(mid).zfill(4)
     
-    # 尝试在 music 文件夹中寻找该歌曲的目录
     try:
         for song_folder in listdir(song_folders):
             if song_folder.startswith(mid_str):
                 song_path = ('%s/%s/' % (song_folders, song_folder))
                 m_index = m_type + 1
                 
-                # 循环查找封面（如果当前难度没有封面，会尝试向下查找）
                 while m_index:
-                    # 检查 jk_XXXX_N.png 是否存在
                     if path.exists('%sjk_%s_%d.png' % (song_path, mid_str, m_index)):
                         if size:
                             return '%sjk_%s_%d_%s.png' % (song_path, mid_str, m_index, size)
                         return '%sjk_%s_%d.png' % (song_path, mid_str, m_index)
                     m_index -= 1
     except FileNotFoundError:
-        # 如果连 music 文件夹都打不开，会走到下面的 dummy 逻辑
         pass
 
-    # 如果以上都找不到，返回系统默认的占位图 (Jacket Dummy)
     if size:
-        return cfg.game_dir + '/data/graphics/jk_dummy_%s.png' % size
+        return game_dir + '/data/graphics/jk_dummy_%s.png' % size
     else:
-        return cfg.game_dir + '/data/graphics/jk_dummy_s.png'
+        return game_dir + '/data/graphics/jk_dummy_s.png'
 
 
 def get_jacket(mid: int, m_type: int, size: str = False):
@@ -153,7 +148,7 @@ def get_ap_card(ap_card: int) -> str:
         card_file += ('S%s' % ap_card[2:].zfill(4))
     else:
         card_file += ap_card[1:].zfill(4)
-    return cfg.game_dir + '/data/graphics/ap_card/%s.png' % card_file
+    return game_dir + '/data/graphics/ap_card/%s.png' % card_file
 
 
 def get_overall_vf(music_b50: list) -> float:
@@ -184,16 +179,15 @@ def get_bpm_str(bpm_max: str, bpm_min: str) -> str:
 
 
 def load_clear(refactor: float or int) -> list:
-    # 强制开辟 8 个坑位，用下标硬绑定，杜绝数组错位
     clear_list = [None] * 8
-    clear_list[0] = cv2.imread(img_archive + '/ms_sel/mark_crash.png', cv2.IMREAD_UNCHANGED) # 0 没过
-    clear_list[1] = cv2.imread(img_archive + '/ms_sel/mark_crash.png', cv2.IMREAD_UNCHANGED) # 1 Crash
-    clear_list[2] = cv2.imread(img_archive + '/ms_sel/mark_comp.png', cv2.IMREAD_UNCHANGED)  # 2 NC(绿)
-    clear_list[3] = cv2.imread(img_archive + '/ms_sel/mark_comp_ex.png', cv2.IMREAD_UNCHANGED) # 3 HC(紫)
-    clear_list[4] = cv2.imread(img_archive + '/ms_sel/mark_comp_ultra.png', cv2.IMREAD_UNCHANGED) # 4 EXC(白)
-    clear_list[5] = cv2.imread(img_archive + '/ms_sel/mark_uc.png', cv2.IMREAD_UNCHANGED)    # 5 UC(粉)
-    clear_list[6] = cv2.imread(img_archive + '/ms_sel/mark_puc.png', cv2.IMREAD_UNCHANGED)   # 6 PUC(金)
-    clear_list[7] = cv2.imread(img_archive + '/ms_sel/mark_saved.png', cv2.IMREAD_UNCHANGED) # 7 SAVED(蓝)
+    clear_list[0] = cv2.imread(img_archive + '/ms_sel/mark_crash.png', cv2.IMREAD_UNCHANGED) 
+    clear_list[1] = cv2.imread(img_archive + '/ms_sel/mark_crash.png', cv2.IMREAD_UNCHANGED) 
+    clear_list[2] = cv2.imread(img_archive + '/ms_sel/mark_comp.png', cv2.IMREAD_UNCHANGED)  
+    clear_list[3] = cv2.imread(img_archive + '/ms_sel/mark_comp_ex.png', cv2.IMREAD_UNCHANGED) 
+    clear_list[4] = cv2.imread(img_archive + '/ms_sel/mark_comp_ultra.png', cv2.IMREAD_UNCHANGED) 
+    clear_list[5] = cv2.imread(img_archive + '/ms_sel/mark_uc.png', cv2.IMREAD_UNCHANGED)    
+    clear_list[6] = cv2.imread(img_archive + '/ms_sel/mark_puc.png', cv2.IMREAD_UNCHANGED)   
+    clear_list[7] = cv2.imread(img_archive + '/ms_sel/mark_saved.png', cv2.IMREAD_UNCHANGED) 
 
     if refactor:
         for index in range(8):
@@ -327,12 +321,7 @@ def generate_std_profile(profile: list, vf: float) -> np.array:
     png_superimpose(bg, bl_pass, (box_margin + 152, 554))
     png_superimpose(bg, data_box, (box_margin + 47, 207))
     png_superimpose(bg, appeal_card, (box_margin + 60, 52))
-    """
-    # It's just so ugly that I have no choice but withdraw this tiny privilege of developer :(
-    if sha256(game_dir.encode('utf-8')).hexdigest() == staff_hash:
-        staff = cv2.imread(img_archive + '/ap_floor/sdvx_staff_s.png', cv2.IMREAD_UNCHANGED)
-        png_superimpose(bg, staff, (box_margin + 60, 43))
-    """
+
     png_superimpose(bg, skill_img, (box_margin + 189, 225))
     png_superimpose(bg, vf_icon, (box_margin + 174, 385))
     png_superimpose(bg, vf_raw, (box_margin + 182, 421))

@@ -1,7 +1,9 @@
 from direct_reader import SDVXDataReader
+from dotenv import load_dotenv
 import numpy as np
 import cv2
-import parse.npdb as npdb
+
+load_dotenv()
 
 db_reader = SDVXDataReader()
 max_id = max(db_reader.music_db.keys()) if db_reader.music_db else 3000
@@ -26,7 +28,6 @@ for _mid, _song in db_reader.music_db.items():
     row[22] = str(int(float(diffs.get('maximum', 0))))
     row[11] = row[12] = row[14] = row[15] = row[17] = row[18] = row[20] = row[21] = row[23] = row[24] = 'Direct'
 
-npdb.level_table = fake_table
 
 from copy import deepcopy
 import pandas as pd
@@ -44,17 +45,18 @@ import traceback
 class APIAsphyxia:
     def __init__(self):
         self.music_map = []
-        self.profile = ['LOLISUKI', 1, '', 0, '0014'] 
-        self.user_name = self.profile[0]
-        
-        self.url = "http://localhost:8083/"
+        self.user_name = os.getenv("SDVX_USER_NAME", "LOLISUKI")
+        self.profile = [self.user_name, 1, '', 0, '0014'] 
+        self.url = os.getenv("ASPHYXIA_API_URL", "http://localhost:8083/")
+        self.refid = os.getenv("SDVX_REFID", "A59D2E646954A37B")
         self.fetch_records()
 
     def fetch_records(self):
-        payload = """<?xml version="1.0" encoding="SHIFT_JIS"?>
+        # 使用 f-string 动态插入 refid
+        payload = f"""<?xml version="1.0" encoding="SHIFT_JIS"?>
 <call model="KFC:J:G:A:2026011300" srcid="00010203040506070809" tag="test">
     <game method="sv7_load_m" ver="0">
-        <refid __type="str">A59D2E646954A37B</refid>
+        <refid __type="str">{self.refid}</refid>
     </game>
 </call>"""
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
@@ -128,7 +130,9 @@ class APIAsphyxia:
             print(f"[API] 请求或解析失败: {e}")
             traceback.print_exc()
 
-asp = APIAsphyxia()
+current_asp = APIAsphyxia()
+
+
 from utli.logger import timber
 
 def direct_get_jacket(mid, m_type, size='b'):
@@ -167,7 +171,11 @@ get_jacket = direct_get_jacket
 
 
 
-def plot_single(sg_index: int, _music_map: list = asp.music_map, profile: list = asp.profile) -> str:
+def plot_single(sg_index: int, _music_map: list = None, profile: list = None) -> str:
+    if _music_map is None or profile is None:
+        current_asp = APIAsphyxia()
+        _music_map = current_asp.music_map
+        profile = current_asp.profile
     """
     Plot function for single record
 
@@ -181,7 +189,7 @@ def plot_single(sg_index: int, _music_map: list = asp.music_map, profile: list =
     """
     valid, mid, m_type, score, clear, grade, m_time, exs, lv, vf = _music_map[sg_index][:10]
     user_name, ap_card, aka_index, skill, crew_id = profile
-    inf_ver, name = npdb.level_table[mid][9], npdb.level_table[mid][1]
+    inf_ver, name = fake_table[mid][9], fake_table[mid][1]
     diff = get_diff(m_type, inf_ver)
     real_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(m_time / 1000))
 
@@ -195,7 +203,7 @@ def plot_single(sg_index: int, _music_map: list = asp.music_map, profile: list =
         """
         Preparation for b50 and single record data
         """
-        single_data = npdb.level_table[mid]
+        single_data = fake_table[mid]
 
         music_map = deepcopy(_music_map)
         music_map.sort(key=lambda x: x[9], reverse=True)
@@ -472,7 +480,7 @@ def plot_single(sg_index: int, _music_map: list = asp.music_map, profile: list =
 
         text_layer = np.array(text_layer)
         png_superimpose(bg, text_layer)
-        output_path = '%s/%s_%s%s.png' % (cfg.output, validate_filename(user_name), mid, diff)
+        output_path = '%s/%s_%s%s.png' % (os.getenv("DIR_OUTPUT_PATH"), validate_filename(user_name), mid, diff)
         cv2.imwrite(output_path, bg[:1560, :540, :3], params=[cv2.IMWRITE_PNG_COMPRESSION, 3])
 
         timber.info('Plot saved at [%s] successfully.' % output_path)
@@ -509,10 +517,10 @@ def plot_b50(_music_map: list = None, profile: list = None) -> str:
         valid, mid, m_type, score, clear, grade, m_time, exs, lv, vf = music_b50[index][:10]
         if not valid:
             break
-        inf_ver = npdb.level_table[mid][9]
-        diff = get_diff(m_type, inf_ver)
+        title, inf_ver = db_reader.get_music_info(mid)
+        diff = get_diff(m_type, int(inf_ver))
         msg.append('\n|#%-4d|%-6.2f  |%s%-2s  |%-9s|%-6s|%-6s|%s' %
-                   ((index + 1), vf, diff, lv, score, clear_table[clear], grade_table[grade], npdb.level_table[mid][1]))
+                   ((index + 1), vf, diff, lv, score, clear_table[clear], grade_table[grade], title))
     msg = ''.join(msg)
     timber.debug('Generate B50 data complete.\n%s' % msg)
 
@@ -575,7 +583,7 @@ def plot_b50(_music_map: list = None, profile: list = None) -> str:
         for index in range(50):
             # Unpack data & validity check
             valid, mid, m_type, score, clear, grade, m_time, exs, lv, vf = music_b50[index][:10]
-            inf_ver = npdb.level_table[mid][9]
+            inf_ver = fake_table[mid][9]
             if not valid:
                 break
 
@@ -613,7 +621,7 @@ def plot_b50(_music_map: list = None, profile: list = None) -> str:
             grade_anc.plot()
 
             # Title
-            title = length_uni(title_font, npdb.level_table[mid][1], length=box_x - 330)
+            title = length_uni(title_font, fake_table[mid][1], length=box_x - 330)
             title_anc = AnchorText(bg, 'title', title, pen, title_font, free=(14, 281), father=box_anc)
             title_anc.plot(color_white)
 
@@ -662,7 +670,7 @@ def plot_b50(_music_map: list = None, profile: list = None) -> str:
 
         text_layer = np.array(text_layer)
         png_superimpose(bg, text_layer)
-        output_path = '%s/%s_B50.png' % (cfg.output, validate_filename(asp.user_name))
+        output_path = '%s/%s_B50.png' % (os.getenv("DIR_OUTPUT_PATH"), validate_filename(profile[0]))
         cv2.imwrite(output_path, bg[:, :, :3], params=[cv2.IMWRITE_PNG_COMPRESSION, 3])
 
         # an attempt to alleviate memory use
@@ -677,8 +685,13 @@ def plot_b50(_music_map: list = None, profile: list = None) -> str:
         return msg
 
 
-def plot_level(level: int, limits: tuple, grade_flag: str = None,
-               _music_map: list = asp.music_map, profile: list = asp.profile):
+def plot_level(level: int, limits: tuple, grade_flag: str = None, _music_map: list = None, profile: list = None):
+    if _music_map is None or profile is None:
+        current_asp = APIAsphyxia()
+        _music_map = current_asp.music_map
+        profile = current_asp.profile
+        
+    user_name, ap_card, aka_name, skill, crew_id = profile
     """
     Plot function to list single level records (above a specific score)
 
@@ -688,7 +701,6 @@ def plot_level(level: int, limits: tuple, grade_flag: str = None,
     :param _music_map:  see plot_b50
     :param profile:     see plot_b50
     """
-    user_name, ap_card, aka_name, skill, crew_id = profile
     lim_l, lim_h = limits
     lv_map = []
     for record in _music_map:
@@ -702,7 +714,7 @@ def plot_level(level: int, limits: tuple, grade_flag: str = None,
     for index in range(length):
         valid, mid, m_type, score, clear, grade, m_time, exs, lv, vf = lv_map[index][:10]
         msg.append('\n|%-5d|%-9s|%-6s|%-6s|%-6.3f |%s' %
-                   (index + 1, score, clear_table[clear], grade_table[grade], vf, npdb.level_table[mid][1]))
+                   (index + 1, score, clear_table[clear], grade_table[grade], vf, fake_table[mid][1]))
     msg = ''.join(msg)
     timber.debug('Generate level.%d scores complete.\n%s' % (level, msg))
 
@@ -785,8 +797,8 @@ def plot_level(level: int, limits: tuple, grade_flag: str = None,
 
         for index in range(length):
             valid, mid, m_type, score, clear, grade, m_time, exs, lv, vf = lv_map[index][:10]
-            inf_ver = npdb.level_table[mid][9]
-            name = npdb.level_table[mid][1]
+            inf_ver = fake_table[mid][9]
+            name = fake_table[mid][1]
 
             box_anc.set_grid((((index + 1) // 2), (1 - index % 2)))
             box_anc.plot()
@@ -866,7 +878,7 @@ def plot_level(level: int, limits: tuple, grade_flag: str = None,
 
         text_layer = np.array(text_layer)
         png_superimpose(bg, text_layer)
-        output_path = '%s/%s_LEVEL%d@%d-%d.png' % (cfg.output, validate_filename(user_name), level, lim_l, lim_h)
+        output_path = '%s/%s_LEVEL%d@%d-%d.png' % (os.getenv("DIR_OUTPUT_PATH"), validate_filename(user_name), level, lim_l, lim_h)
         cv2.imwrite(output_path, bg[:, :, :3], params=[cv2.IMWRITE_PNG_COMPRESSION, 3])
         timber.info('Plot saved at [%s] successfully.' % output_path)
 
@@ -878,7 +890,16 @@ def plot_level(level: int, limits: tuple, grade_flag: str = None,
         return msg
 
 
-def plot_summary(base_lv: int, _music_map: list = asp.music_map, profile: list = asp.profile):
+def plot_summary(base_lv: int, _music_map: list = None, profile: list = None):
+    if _music_map is None or profile is None:
+        current_asp = APIAsphyxia()
+        _music_map = current_asp.music_map
+        profile = current_asp.profile
+        
+    """
+    Read and initialize data
+    """
+    # ... 后续代码保持不变 ...
     """
     Plot function to analyze user's record.
     :param _music_map: see plot_b50
@@ -902,7 +923,7 @@ def plot_summary(base_lv: int, _music_map: list = asp.music_map, profile: list =
     #         [NO, CR, NC, HC, UC, PUC]
     # 6-16 |  [NO, D, C, B, A, A+, AA, AA+, AAA, AAA+, S]
     # 17   |  [sum]
-    for single_music in npdb.level_table:  # Calculating the sum of each level
+    for single_music in fake_table:  # Calculating the sum of each level
         if not single_music[0]:
             continue
         nov, adv, exh, inf, mxm = \
@@ -1402,7 +1423,7 @@ def plot_summary(base_lv: int, _music_map: list = asp.music_map, profile: list =
 
         text_layer = np.array(text_layer)
         png_superimpose(bg, text_layer)
-        output_path = '%s/%s_SUMMARY.png' % (cfg.output, validate_filename(user_name))
+        output_path = '%s/%s_SUMMARY.png' % (os.getenv("DIR_OUTPUT_PATH"), validate_filename(user_name))
         cv2.imwrite(output_path, bg[:, :, :3], params=[cv2.IMWRITE_PNG_COMPRESSION, 3])
 
         try:
