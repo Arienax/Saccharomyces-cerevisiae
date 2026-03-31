@@ -1,11 +1,67 @@
-2026/03/31 22:38:55 [INFO] logger.py(23) - FileHandler.encoding = utf-8
-2026/03/31 22:38:55 [INFO] logger.py(24) - TEST_MODE on
-2026/03/31 22:39:00 [DEBUG] app.py(50) - Get summary from level "17"
-2026/03/31 22:39:00 [DEBUG] main.py(969) - Generate summary data complete.
-| Level Summary from lv.17
-| Level    NC      HC      UC      PUC     | AAA     AAA+    S       | SUM
-| lv.17    69      366     11      1       | 123     121     61      | 822     
-| lv.18    168     62      1       0       | 26      13      7       | 736     
-| lv.19    14      2       0       0       | 2       1       0       | 203     
-| lv.20    0       0       0       0       | 0       0       0       | 31      
-2026/03/31 22:39:15 [INFO] main.py(1436) - Plot saved at [E:\BaiduNetdiskDownload\SDVX7-2026020300/LOLISUKI_SUMMARY.png] successfully.
+2026/03/31 23:12:01 [INFO] logger.py(23) - FileHandler.encoding = utf-8
+2026/03/31 23:12:01 [INFO] logger.py(24) - TEST_MODE on
+2026/03/31 23:12:08 [DEBUG] main.py(719) - Generate level.17 scores complete.
+|Level.17       |Limits = 9900000 - 10000000
+|No.  |Score    |Clear |Grade |VF     |Name
+|1    |10000000 |PUC   |S     |20.200 |The setting sun(burst)
+|2    |9985532  |UC    |S     |18.850 |WWW
+|3    |9972350  |EX-HC |S     |18.500 |Resonant Gear
+|4    |9972268  |EX-HC |S     |18.500 |ポメグラネイト
+|5    |9969915  |UC    |S     |19.400 |Sharkbait
+|6    |9967741  |EX-HC |S     |18.500 |チョコレートスマイル
+|7    |9964366  |EX-HC |S     |18.450 |Chronomia
+|8    |9960334  |EX-HC |S     |19.000 |Daisycutter
+|9    |9958471  |UC    |S     |19.350 |Pet Peeve
+|10   |9953450  |EX-HC |S     |18.450 |もぐもぐYUMMY！
+|11   |9953063  |EX-HC |S     |18.450 |Secret Traveler -MeniRemix-
+|12   |9951974  |UC    |S     |18.800 |QQ
+|13   |9950638  |EX-HC |S     |18.450 |片翼のディザイア
+|14   |9946808  |EX-HC |S     |19.000 |Into The Madness
+|15   |9943447  |EX-HC |S     |18.450 |美少女無罪齶パイレーツ
+|16   |9940604  |EX-HC |S     |18.450 |The setting sun
+|17   |9940265  |HC    |S     |18.050 |#FairyJoke #SDVX_Edit
+|18   |9938407  |EX-HC |S     |18.400 |ヒトガタ
+|19   |9937934  |EX-HC |S     |18.400 |Li齷vre -blanche-
+|20   |9937419  |EX-HC |S     |18.400 |Profession (αirlemoneX "Mechanical Engineering" Remix)
+|21   |9935213  |EX-HC |S     |18.950 |Sunflower Vibes
+|22   |9935029  |EX-HC |S     |18.400 |Second Game
+|23   |9934141  |EX-HC |S     |18.400 |One More Lovely
+|24   |9934127  |EX-HC |S     |18.400 |右肩の蝶 (空澄セナ Cover)
+|25   |9933455  |UC    |S     |18.750 |Synthesis.
+|26   |9933387  |EX-HC |S     |18.400 |ライアーダンサー
+|27   |9933294  |UC    |S     |18.750 |Synergy For Angels
+|28   |9933046  |EX-HC |S     |18.400 |鏡面の波（ramble mix）
+|29   |9932256  |EX-HC |S     |18.950 |Hexennacht
+|30   |9931818  |UC    |S     |19.300 |L2 -Reminiscence- (SDVX ver.)
+|31   |9931129  |EX-HC |S     |18.950 |常夏！！クリスタライズ・シャーベット
+|32   |9930453  |EX-HC |S     |18.400 |ヴァンパイア
+|33   |9929609  |EX-HC |S     |18.400 |SOLAR ECLIPSE
+|34   |9926542  |EX-HC |S     |18.400 |Crossfade
+|35   |9925430  |EX-HC |S     |18.400 |神威
+|36   |9924279  |EX-HC |S     |18.400 |穢れなきユーフォリア
+|37   |9923076  |EX-HC |S     |18.950 |Plan 8
+|38   |9922523  |EX-HC |S     |18.400 |Shooting Star
+|39   |9921503  |EX-HC |S     |18.400 |Sleepless days
+|40   |9921363  |EX-HC |S     |18.400 |ロマンシングエスケープ
+|41   |9920833  |EX-HC |S     |18.400 |Decoy
+|42   |9920819  |EX-HC |S     |18.950 |Gryphone
+|43   |9920716  |EX-HC |S     |18.400 |cross the future
+|44   |9920562  |EX-HC |S     |18.400 |かくれんぼ (胡桃のあ Cover)
+|45   |9916666  |EX-HC |S     |18.950 |Made In Love
+|46   |9914507  |EX-HC |S     |18.400 |分けるな危険！モモモモモモーイズム
+|47   |9914255  |EX-HC |S     |18.900 |夏色DIARY -Summer Dazzlin' Vacation miX-
+|48   |9911660  |EX-HC |S     |18.400 |The Clown of 24stairs
+|49   |9910891  |EX-HC |S     |18.350 |Enjoy This Time
+|50   |9910884  |EX-HC |S     |18.350 |Say!ファンファーレ!
+|51   |9910313  |HC    |S     |18.000 |木洩れ日に咲く
+|52   |9908536  |EX-HC |S     |18.350 |色は匂へど散りぬるを
+|53   |9907487  |HC    |S     |18.000 |全力ハッピーライフ
+|54   |9905857  |EX-HC |S     |18.350 |ンポロロッカ
+|55   |9905115  |EX-HC |S     |18.900 |Guinevere～白き妖精～
+|56   |9904246  |HC    |S     |18.000 |ステラ・イミグレーション
+|57   |9903846  |EX-HC |S     |18.350 |Dawn of Asia(Alkome Remix)
+|58   |9901630  |EX-HC |S     |18.350 |曇天羊
+|59   |9901055  |UC    |S     |19.250 |EYE OF THE HEAVEN
+|60   |9900714  |HC    |S     |18.000 |ANGER of the GOD
+|61   |9900379  |HC    |S     |18.000 |ハレ トキドキ メランコリック
+2026/03/31 23:12:11 [INFO] main.py(886) - Plot saved at [E:\BaiduNetdiskDownload\SDVX7-2026020300/LOLISUKI_LEVEL17@9900000-10000000.png] successfully.

@@ -153,15 +153,19 @@ def direct_get_jacket(mid, m_type, size='b'):
                     jk = jk_fallback
                     break
 
-    # 终极兜底：如果连 NOV 都没有，生成一张空白透明图防崩溃
-    if jk is None:
-        jk = db_reader.get_jacket_image(mid, 0)
     if jk is None:
         jk = np.zeros((200, 200, 4), dtype=np.uint8)
         jk[:, :, 3] = 255
         
-    if len(jk.shape) == 3 and jk.shape[2] == 3:
+    # === 核心修复：处理各种不规范的图片通道 ===
+    if len(jk.shape) == 2:
+        # 补全灰度图的通道维度
+        jk = cv2.cvtColor(jk, cv2.COLOR_GRAY2BGRA)
+    elif len(jk.shape) == 3 and jk.shape[2] == 3:
+        # 补全普通彩色图的 Alpha 透明通道
         jk = cv2.cvtColor(jk, cv2.COLOR_BGR2BGRA)
+    # ==========================================
+
     if size == 's':
         jk = cv2.resize(jk, (136, 136), interpolation=cv2.INTER_AREA)
     return jk
@@ -803,43 +807,46 @@ def plot_level(level: int, limits: tuple, grade_flag: str = None, _music_map: li
             box_anc.set_grid((((index + 1) // 2), (1 - index % 2)))
             box_anc.plot()
 
-            # Load and superimpose jacket
+            # Load and superimpose jacket (同步 B50 坐标)
             jk = get_jacket(mid, m_type, 's')
-            jk_anc = AnchorImage(bg, 'jacket', jk, free=(8, 17), father=box_anc)
+            jk_anc = AnchorImage(bg, 'jacket', jk, free=(8, 10), father=box_anc)
             jk_anc.plot()
 
-            # Level box
+            # Level box (同步 B50 缩放与坐标)
             if m_type == 3:
                 level_box = level_list[m_type + int(inf_ver)]
             else:
                 level_box = level_list[m_type]
-            level_box_anc = AnchorImage(bg, 'level box', level_box, free=(14, 160), father=box_anc)
+            
+            level_factor = 0.8  # 增加 0.8 的缩放系数，防止遮挡封面
+            level_box = cv2.resize(level_box, dsize=None, fx=level_factor, fy=level_factor, interpolation=cv2.INTER_AREA)
+            level_box_anc = AnchorImage(bg, 'level box', level_box, free=(14, 135), father=box_anc)
             level_box_anc.plot()
 
-            level_num_anc = AnchorText(bg, 'level text', lv, pen, level_font, free=(2, 76), father=level_box_anc)
+            level_num_anc = AnchorText(bg, 'level text', lv, pen, level_font, free=(8, 70), father=level_box_anc)
             level_num_anc.plot(color_white)
 
-            # Clear mark & grade mark
+            # Clear mark & grade mark (同步 B50 坐标)
             clear_icon = clear_list[clear]
             clear_anc = AnchorImage(bg, 'clear', clear_icon, free=(61, 147), father=box_anc)
             clear_anc.plot()
 
             grade_icon = grade_list[grade]
-            grade_anc = AnchorImage(bg, 'grade', grade_icon, free=(61, 202), father=box_anc)
+            grade_anc = AnchorImage(bg, 'grade', grade_icon, free=(30, 172), father=box_anc)
             grade_anc.plot()
 
-            # Title
-            title = length_uni(title_font, name, length=box_x - 300)
-            title_anc = AnchorText(bg, 'title', title, pen, title_font, free=(14, 271), father=box_anc)
-            title_anc.plot(color_black)
+            # Title (同步 B50 坐标与颜色)
+            title = length_uni(title_font, name, length=box_x - 330)
+            title_anc = AnchorText(bg, 'title', title, pen, title_font, free=(14, 281), father=box_anc)
+            title_anc.plot(color_white)
 
-            # Score contains two parts
+            # Score (同步 B50 颜色配置)
             score_field = Anchor(bg, 'score field', free=(63, 271), father=box_anc)
-            score = str(score).zfill(8)
+            score_str = str(score).zfill(8)
 
-            score_color = [color_black for _ in range(8)]  # Let foremost '0's be gray
+            score_color = [color_white for _ in range(8)]  # 将原版的 color_black 改为 color_white
             for __index in range(8):
-                if score[__index] != '0':
+                if score_str[__index] != '0':
                     break
                 score_color[__index] = color_gray
 
@@ -847,7 +854,7 @@ def plot_level(level: int, limits: tuple, grade_flag: str = None, _music_map: li
             high_grid.creat_grid((0, 3), (0, h_size))
             high_num_anc = AnchorText(bg, 'high num', '', pen, score_h_font, father=high_grid)
             for __index in range(0, 4):
-                high_num_anc.text = score[__index]
+                high_num_anc.text = score_str[__index]
                 high_num_anc.set_grid((0, __index))
                 high_num_anc.plot(score_color[__index])
 
@@ -855,17 +862,17 @@ def plot_level(level: int, limits: tuple, grade_flag: str = None, _music_map: li
             low_grid.creat_grid((0, 3), (0, l_size))
             low_num_anc = AnchorText(bg, 'low num', '', pen, score_l_font, father=low_grid)
             for __index in range(0, 4):
-                low_num_anc.text = score[__index + 4]
+                low_num_anc.text = score_str[__index + 4]
                 low_num_anc.set_grid((0, __index))
                 low_num_anc.plot(score_color[__index + 4])
 
-            # 'VF' and its value
-            res_vf_field = Anchor(bg, 'respective vf field', free=(53, 488), father=box_anc)  # res = respective
+            # Respective VF (保留 SCORE 名次文本，但同步 B50 的坐标与文字颜色)
+            res_vf_field = Anchor(bg, 'respective vf field', free=(53, 488), father=box_anc)
             res_vf_text_anc = AnchorText(bg, 'res vf text', 'SCORE    #%03d' % (index + 1),
-                                         pen, vf_str_font, (0, -97), res_vf_field)
+                                         pen, vf_str_font, (0, 1), res_vf_field)
             res_vf_num_anc = AnchorText(bg, 'res vf num', '%.3f' % vf, pen, vf_num_font, (20, -5), res_vf_field)
 
-            res_vf_text_anc.plot(color_black)
+            res_vf_text_anc.plot(color_white)
             res_vf_num_anc.plot(get_vf_level(vf, is_darker=True, is_color=True))
 
         """
